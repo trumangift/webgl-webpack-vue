@@ -38,13 +38,14 @@ module.exports = {
       runtimeChunk: {
         name: 'runtime'
       },
-      splitChunks: {
-        chunks: 'all',
-        name: 'vender'
-      },
+      // splitChunks: {
+      //   chunks: 'all',
+      //   name: 'vender'
+      // },
     },
     output: {
        filename: '[name].[contenthash].js',
+       chunkFilename: '[name].[contenthash].bundle.js',
        path: path.resolve(__dirname, 'dist'),
        publicPath: '',
     },

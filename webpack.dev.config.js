@@ -4,13 +4,24 @@ const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     entry: {
        'main': './src/index.js',
     },
+    optimization: {
+      runtimeChunk: {
+        name: 'runtime'
+      },
+      // splitChunks: {
+      //   chunks: 'all',
+      //   name: 'vender',
+      // },
+    },
     output: {
        filename: '[name].bundle.js',
+       chunkFilename: '[name].[contenthash].bundle.js',
        path: path.resolve(__dirname, 'dist'),
        publicPath: '',
     },
@@ -85,7 +96,7 @@ module.exports = {
       new VueLoaderPlugin(),
       new TerserPlugin({}),
       new HtmlWebpackPlugin({
-          chunks: ['main'],
+          chunks: ['vender','runtime', 'main'],
           filename: './index.html',
           template: './index.html',
           inject: true,
@@ -93,5 +104,6 @@ module.exports = {
           title: 'webgl demo',
       }),
       new CleanWebpackPlugin(),
+      new BundleAnalyzerPlugin(),
     ],
 }
