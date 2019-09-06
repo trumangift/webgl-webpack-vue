@@ -1,5 +1,6 @@
 const path = require('path');
 const cssnano = require("cssnano");
+const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -18,16 +19,29 @@ const AUTOPREFIXER_BROWSERS = [
     'Safari >= 7.1',
 ];
 
+function getHtmlWebPackPlugin() {
+    return  new HtmlWebpackPlugin({
+                chunks: ['vender','runtime', 'main'],
+                filename: './index.html',
+                template: './index.html',
+                inject: true,
+                hash: false,
+                title: 'webgl demo',
+            });
+}
+
 module.exports = {
     entry: {
-       'main': './src/index.js',
+       main: path.resolve(__dirname, 'src/index.js'),
     },
     optimization: {
+      runtimeChunk: {
+        name: 'runtime'
+      },
       splitChunks: {
         chunks: 'all',
-        minSize: 10000,
-        automaticNameDelimiter: '~',
-      }
+        name: 'vender'
+      },
     },
     output: {
        filename: '[name].[contenthash].js',
@@ -118,20 +132,12 @@ module.exports = {
             discardComments: {
               removeAll: true,
             },
-            // Run cssnano in safe mode to avoid
-            // potentially unsafe transformations.
             safe: true,
           },
           canPrint: true,
       }),
-      new HtmlWebpackPlugin({
-          chunks: ['main'],
-          filename: './index.html',
-          template: './index.html',
-          inject: true,
-          hash: false,
-          title: 'webgl demo',
-      }),
+      getHtmlWebPackPlugin(),
+      new webpack.HashedModuleIdsPlugin(),
       new CleanWebpackPlugin(),
     ],
 }

@@ -1,9 +1,9 @@
 import "babel-polyfill";
 
-import Vue from 'vue'
-import App from './App.vue'
-
+import Vue from 'vue';
+import App from './App.vue';
 new Vue({
-    el: "#root",
+    el: "#app",
     render:h=>h(App)
-})
+});
+console.log(123);
